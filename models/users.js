@@ -1,0 +1,30 @@
+'use strict';
+module.exports = (sequelize, Datatypes) => {
+  var users = sequelize.define (
+    "users",
+    {
+      UserId: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Datatypes.INTEGER
+      },
+      FirstName: Datatypes.STRING,
+      LastName: Datatypes.STRING,
+      Email: {
+        type: Datatypes.STRING,
+        unique: true
+      },
+      Username: {
+        type: Datatypes.STRING,
+        unique: true
+      },
+      Password: Datatypes.STRING,
+      createdAt: Datatypes.DATE,
+      updatedAt: Datatypes.DATE
+    },
+    {}
+  );
+
+  return users;
+};
