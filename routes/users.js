@@ -61,4 +61,17 @@ router.post('/login', function (req, res, next) {
   });
 });
 
+router.get('/profile', function (req, res, next) {
+  let token = req.cookies.jwt;
+  authService.verifyUser(token)
+    .then(user => {
+      if (user) {
+        res.send(JSON.stringify(user));
+      } else {
+        res.status(401);
+        res.send('Must be logged in');
+      }
+    })
+});
+
 module.exports = router;
