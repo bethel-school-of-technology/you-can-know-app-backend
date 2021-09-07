@@ -25,7 +25,7 @@ router.post('/signup', function(req, res, next) {
         FirstName: req.body.firstName,
         LastName: req.body.lastName,
         Email: req.body.email,
-        Password: req.body.password
+        Password: authService.hashPassword(req.body.password) //<--- Change to this code here
       }
     })
     .spread(function(result, created) {
@@ -42,23 +42,24 @@ router.post('/login', function (req, res, next) {
   models.users.findOne({
     where: {
       Username: req.body.username,
-      Password: req.body.password
     }
   }).then(user => {
     if (!user) {
       console.log('User not found')
-      return res.status(401).json({
-        message: "Login Failed"
-      });
+      return res.status(401).json({ message: "Login Failed" });
     }
     if (user) {
-      let token = authService.signUser(user); // <--- Uses the authService to create jwt token
-      res.cookie('jwt', token); // <--- Adds token to response as a cookie
-      res.send('Login successful');
-    } else {
+      let passwordMatch = authService.comparePasswords(req.body.password, user.Password);
+      if(passwordMatch) {
+        let token = authService.signUser(user); // <--- Uses the authService to create jwt token
+        res.cookie('jwt', token); // <--- Adds token to response as a cookie
+        res.send('Login successful');
+      } else {
       console.log('Wrong password');
+      res.send('Wrong Password');
+      }
     }
-  });
+  })
 });
 
 router.get('/profile', function (req, res, next) {
