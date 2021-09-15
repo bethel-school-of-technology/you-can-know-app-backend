@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models'); //<--- Add models
 var authService = require('../services/auth'); //<--- Add authentication service
-
+const { check } = require('express-validator');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   models.users.findAll({}).then(users => {
@@ -15,7 +15,16 @@ router.get('/', function(req, res, next) {
 });
 
 // Create new user if one doesn't exist
-router.post('/signup', function(req, res, next) {
+router.post('/signup',
+  check('username', 'The username must be 3+ chararacters long')
+    .isLength({ min: 3 }),
+  check('password', 'The password must be 6+ chararacters long')
+    .isLength({ min: 6 }),
+  check('email').isEmail().withMessage({
+    message: 'Not a correct email',
+    errorCode: 1,
+  }),
+function(req, res, next) {
   models.users
     .findOrCreate({
       where: {
