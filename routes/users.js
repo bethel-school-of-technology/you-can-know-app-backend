@@ -19,7 +19,8 @@ router.post('/signup', function(req, res, next) {
   models.users
     .findOrCreate({
       where: {
-        Username: req.body.username
+        Username: req.body.username,
+        FirstName: req.body.firstname
       },
       defaults: {
         FirstName: req.body.firstName,
@@ -70,7 +71,7 @@ router.post('/login', function (req, res, next) {
 });
 
 router.get('/profile', function (req, res, next) {
-  let token = req.cookies.jwt;
+  let token = getToken(req);
   authService.verifyUser(token)
     .then(user => {
       if (user) {
@@ -85,5 +86,17 @@ router.get('/profile', function (req, res, next) {
       }
     })
 });
+
+function getToken(req) {
+  let headers = req.headers["authorization"];
+  //console.log(headers);
+  if (headers.startsWith("Bearer ")) {
+    headers = headers.slice(7);
+    console.log(headers);
+  } else {
+    return null;
+  }
+  return headers;
+}
 
 module.exports = router;
