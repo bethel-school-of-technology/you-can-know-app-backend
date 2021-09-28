@@ -23,8 +23,16 @@ module.exports = (sequelize, Datatypes) => {
       createdAt: Datatypes.DATE,
       updatedAt: Datatypes.DATE
     },
-    {}
+    // {}
   );
+
+  
+// Posts.associate = (models) => {
+//   Posts.belongsTo(models.User, {
+
+//   })
+// }
+  
 
   return users;
 };

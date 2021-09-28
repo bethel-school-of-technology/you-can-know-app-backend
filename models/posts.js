@@ -2,34 +2,53 @@
 const {
   Model
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class posts extends Model {
+module.exports = (sequelize, Datatypes) => {
+  const Posts = sequelize.define("posts", {
+  // class posts extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
-  };
-  posts.init({
+    
+  // posts: init({
     PostId: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: Datatypes.INTEGER
     },
-    PostTitle: DataTypes.STRING,
-    PostBody: DataTypes.STRING,
-    UserId: {
-      type: DataTypes.INTEGER,
+    PostTitle: {
+       type: Datatypes.STRING,
+       allowNull: false,
+    },
+    
+    PostBody: {
+      type: Datatypes.STRING,
       allowNull: false,
     },
-    Delete: DataTypes.BOOLEAN
+
+    UserId: {
+      type: Datatypes.INTEGER,
+      allowNull: false,
+    },
+    Delete: {
+      type: Datatypes.BOOLEAN,
+      defaultValue: false,
+    }
   }, {
     sequelize,
     modelName: 'posts',
   });
-  return posts;
+
+  Posts.associate = (models) => {
+    Posts.belongsTo(models.users, {
+    foreignKey: {
+      allowNull: false,
+    },
+  });
+};
+
+return Posts;
+
 };

@@ -1,4 +1,5 @@
 var express = require('express');
+const { sequelize } = require('../models');
 var router = express.Router();
 var models = require('../models'); //<--- Add models
 var authService = require('../services/auth'); //<--- Add authentication service
@@ -31,9 +32,15 @@ router.post('/signup', function(req, res, next) {
     })
     .spread(function(result, created) {
       if (created) {
-        res.send('User successfully created');
+        res.send({
+          message: "created user",
+          data: result
+        });
       } else {
-        res.send('This user already exists');
+        res.send({
+          message: "user already exist!",
+          data: result
+        });
       }
     });
 });
@@ -44,6 +51,7 @@ router.post('/login', function (req, res, next) {
     where: {
       Username: req.body.username,
     }
+   
   }).then(user => {
     if (!user) {
       console.log('User not found')
@@ -86,6 +94,22 @@ router.get('/profile', function (req, res, next) {
       }
     })
 });
+router.get('/posts', function (req, res, next) {
+  let token = getToken(req);
+  authService.verifyUser(token)
+    .then(user => {
+      if (user) {
+        res.json({
+          status: 200,
+          message: `successful request`,
+          user: user
+        });
+      } else {
+        res.status(401);
+        res.send('Must be logged in');
+      }
+    })
+});
 
 function getToken(req) {
   let headers = req.headers["authorization"];
@@ -98,5 +122,29 @@ function getToken(req) {
   }
   return headers;
 }
+
+// module.exports = (sequelize, DataTypes) => {
+//   const User = sequelize.define("User", {
+//     email: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//   });
+
+
+// User.associate = (models) => {
+//   User.hasOne(models.User, { 
+//     onDelete: "cascade"
+//   });
+//   User.hasMany(models.Posts, {
+//     foreignKey: {
+//       allowNull: false
+//     }
+//   });
+// }
+
+// return User 
+// }
+
 
 module.exports = router;

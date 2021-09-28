@@ -1,11 +1,43 @@
 var express = require('express');
 var router = express.Router();
-// var models = require('../models');
+var models = require('../models');
 var authService = require('../services/auth');
 
-router.get('/createPost', function(req,res,next){
-    res.json('posts', { title: 'Create a Post'});
-});
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+    models.posts.findAll({}).then(posts => {
+      res.json({
+        status: 200,
+        message:'successful',
+        myPosts: posts
+      });
+    })
+  });
+  
+  // Create new user if one doesn't exist
+  router.post('/posts', function(req, res, next) {
+      let token = getToken(req);
+      authService.verifyUser(token)
+      .then(user => {
+        models.posts
+      .findOrCreate({
+        where: {
+          PostTitle: req.body.postTitle,
+          PostBody: req.body.postBody,
+          UserId: user.UserId
+        },
+      })
+      .spread(function(result, created) {
+        if (created) {
+          res.send('Post successfully created');
+        } else {
+          res.send('This post already exists');
+        }
+      });
+      })
+    
+  });
+
 
 router.get('/', function(req, res, next) {
     res.json({message: "this works"})
