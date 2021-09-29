@@ -15,7 +15,8 @@ router.get('/', function(req, res, next) {
   });
   
   // Create new user if one doesn't exist
-  router.post('/posts', function(req, res, next) {
+  router.post('/create', function(req, res, next) {
+      console.log(req.body)
       let token = getToken(req);
       authService.verifyUser(token)
       .then(user => {
@@ -26,7 +27,7 @@ router.get('/', function(req, res, next) {
           PostBody: req.body.postBody,
           UserId: user.UserId
         },
-      })
+      }).catch(e => console.log(e))
       .spread(function(result, created) {
         if (created) {
           res.send('Post successfully created');
@@ -34,7 +35,7 @@ router.get('/', function(req, res, next) {
           res.send('This post already exists');
         }
       });
-      })
+      }).catch(e => console.log(e))
     
   });
 
