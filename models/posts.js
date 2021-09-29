@@ -41,13 +41,13 @@ module.exports = (sequelize, Datatypes) => {
     modelName: 'posts',
   });
 
-  Posts.associate = (models) => {
-    Posts.belongsTo(models.users, {
-    foreignKey: {
-      allowNull: false,
-    },
-  });
-};
+//   Posts.associate = (models) => {
+//     Posts.belongsTo(models.users, {
+//     foreignKey: {
+//       allowNull: false,
+//     },
+//   });
+// };
 
 return Posts;
 

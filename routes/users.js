@@ -3,7 +3,6 @@ const { sequelize } = require('../models');
 var router = express.Router();
 var models = require('../models'); //<--- Add models
 var authService = require('../services/auth'); //<--- Add authentication service
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   models.users.findAll({}).then(users => {
@@ -14,7 +13,6 @@ router.get('/', function(req, res, next) {
     });
   })
 });
-
 // Create new user if one doesn't exist
 router.post('/signup', function(req, res, next) {
   models.users
@@ -44,14 +42,12 @@ router.post('/signup', function(req, res, next) {
       }
     });
 });
-
 // Login user and return JWT as cookie
 router.post('/login', function (req, res, next) {
   models.users.findOne({
     where: {
       Username: req.body.username,
     }
-   
   }).then(user => {
     if (!user) {
       console.log('User not found')
@@ -77,7 +73,6 @@ router.post('/login', function (req, res, next) {
     }
   })
 });
-
 router.get('/profile', function (req, res, next) {
   let token = getToken(req);
   authService.verifyUser(token)
@@ -94,23 +89,29 @@ router.get('/profile', function (req, res, next) {
       }
     })
 });
-router.get('/posts', function (req, res, next) {
+router.get("/posts", function (req, res, next) {
   let token = getToken(req);
-  authService.verifyUser(token)
-    .then(user => {
-      if (user) {
-        res.json({
-          status: 200,
-          message: `successful request`,
-          user: user
+  authService.verifyUser(token).then((user) => {
+    if (user) {
+      models.posts
+        .findAll({
+          where: {
+            UserId: user.UserId,
+          },
+        })
+        .then((posts) => {
+          res.json({
+            status: 200,
+            message: "successful",
+            myPosts: posts,
+          });
         });
-      } else {
-        res.status(401);
-        res.send('Must be logged in');
-      }
-    })
+    } else {
+      res.status(401);
+      res.send("Must be logged in");
+    }
+  });
 });
-
 function getToken(req) {
   let headers = req.headers["authorization"];
   //console.log(headers);
@@ -122,7 +123,6 @@ function getToken(req) {
   }
   return headers;
 }
-
 // module.exports = (sequelize, DataTypes) => {
 //   const User = sequelize.define("User", {
 //     email: {
@@ -130,10 +130,8 @@ function getToken(req) {
 //       allowNull: false,
 //     },
 //   });
-
-
 // User.associate = (models) => {
-//   User.hasOne(models.User, { 
+//   User.hasOne(models.User, {
 //     onDelete: "cascade"
 //   });
 //   User.hasMany(models.Posts, {
@@ -142,9 +140,6 @@ function getToken(req) {
 //     }
 //   });
 // }
-
-// return User 
+// return User
 // }
-
-
 module.exports = router;
