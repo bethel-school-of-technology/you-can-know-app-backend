@@ -11,10 +11,12 @@
                     "seqType": "Sequelize.INTEGER"
                 },
                 "PostTitle": {
+                    "allowNull": false,
                     "field": "PostTitle",
                     "seqType": "Sequelize.STRING"
                 },
                 "PostBody": {
+                    "allowNull": false,
                     "field": "PostBody",
                     "seqType": "Sequelize.STRING"
                 },
@@ -24,8 +26,15 @@
                     "seqType": "Sequelize.INTEGER"
                 },
                 "Delete": {
+                    "defaultValue": {
+                        "value": false
+                    },
                     "field": "Delete",
                     "seqType": "Sequelize.BOOLEAN"
+                },
+                "Country": {
+                    "field": "Country",
+                    "seqType": "Sequelize.STRING"
                 },
                 "createdAt": {
                     "allowNull": false,
@@ -84,5 +93,5 @@
             "indexes": []
         }
     },
-    "revision": 2
+    "revision": 3
 }

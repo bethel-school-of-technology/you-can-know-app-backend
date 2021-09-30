@@ -1,5 +1,45 @@
 {
     "tables": {
+        "posts": {
+            "tableName": "posts",
+            "schema": {
+                "PostId": {
+                    "allowNull": false,
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "field": "PostId",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "PostTitle": {
+                    "field": "PostTitle",
+                    "seqType": "Sequelize.STRING"
+                },
+                "PostBody": {
+                    "field": "PostBody",
+                    "seqType": "Sequelize.STRING"
+                },
+                "UserId": {
+                    "allowNull": false,
+                    "field": "UserId",
+                    "seqType": "Sequelize.INTEGER"
+                },
+                "Delete": {
+                    "field": "Delete",
+                    "seqType": "Sequelize.BOOLEAN"
+                },
+                "createdAt": {
+                    "allowNull": false,
+                    "field": "createdAt",
+                    "seqType": "Sequelize.DATE"
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "field": "updatedAt",
+                    "seqType": "Sequelize.DATE"
+                }
+            },
+            "indexes": []
+        },
         "users": {
             "tableName": "users",
             "schema": {
@@ -44,5 +84,5 @@
             "indexes": []
         }
     },
-    "revision": 1
+    "revision": 2
 }
