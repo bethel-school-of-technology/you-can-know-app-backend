@@ -35,19 +35,15 @@ module.exports = (sequelize, Datatypes) => {
     Delete: {
       type: Datatypes.BOOLEAN,
       defaultValue: false,
-    }
-  }, {
+    },
+    Country: {
+      type: Datatypes.STRING,
+      allowNull: false,
+  },
+}, {
     sequelize,
     modelName: 'posts',
   });
-
-//   Posts.associate = (models) => {
-//     Posts.belongsTo(models.users, {
-//     foreignKey: {
-//       allowNull: false,
-//     },
-//   });
-// };
 
 return Posts;
 
