@@ -3,23 +3,51 @@ var router = express.Router();
 var models = require("../models");
 var authService = require("../services/auth");
 
-
 /* GET users listing. */
 router.get("/", function (req, res, next) {
-  models.posts.findAll({}).then((posts) => {
-    res.json({
-      status: 200,
-      message: "successful",
-      myPosts: posts,
+  models.posts
+    .findAll({
+      // include: [
+      //  {
+      //   model: models.users,
+      //   required: true
+      //  }
+      // ]
+    })
+    .then((posts) => {
+      // Retrieve all users
+      const postArray = [];
+      posts.forEach((post) => postArray.push(post.dataValues));
+
+      models.users.findAll({}).then((users) => {
+        const usersArray = [];
+        users.forEach((user) => usersArray.push(user));
+
+        res.json({
+          status: 200,
+          message: "successful",
+          myPosts: postArray.map((post) => {
+            const associatedUser = usersArray.find(
+              (user) => user.UserId === post.UserId
+            );
+            return {
+              PostTitle: post.PostTitle,
+              PostBody: post.PostBody,
+              Country: post.Country,
+              createdAt: post.createdAt,
+              user: {
+                FirstName: associatedUser.FirstName,
+                LastName: associatedUser.LastName,
+              },
+            };
+          }),
+        });
+      });
     });
-  });
 });
-
-
 
 // Create new user if one doesn't exist
 router.post("/create", function (req, res, next) {
-  console.log(req.body);
   let token = getToken(req);
   authService
     .verifyUser(token)
@@ -28,12 +56,12 @@ router.post("/create", function (req, res, next) {
         .findOrCreate({
           where: {
             Country: req.body.Country,
-            PostTitle: req.body.postTitle,
-            PostBody: req.body.postBody,
+            PostTitle: req.body.PostTitle,
+            PostBody: req.body.PostBody,
             UserId: user.UserId,
           },
         })
-        .catch((e) => console.log(e))
+        .catch((e) => console.log(`Error inserting new post`, e))
         .spread(function (result, created) {
           if (created) {
             res.json({
@@ -41,7 +69,6 @@ router.post("/create", function (req, res, next) {
               message: "Post successfully created.",
               post: result,
             });
-            // res.send("Post successfully created");
           } else {
             res.send("This post already exists");
           }
