@@ -18,7 +18,7 @@
                 "PostBody": {
                     "allowNull": false,
                     "field": "PostBody",
-                    "seqType": "Sequelize.STRING"
+                    "seqType": "Sequelize.TEXT"
                 },
                 "UserId": {
                     "allowNull": false,
@@ -33,6 +33,7 @@
                     "seqType": "Sequelize.BOOLEAN"
                 },
                 "Country": {
+                    "allowNull": false,
                     "field": "Country",
                     "seqType": "Sequelize.STRING"
                 },
@@ -93,5 +94,5 @@
             "indexes": []
         }
     },
-    "revision": 3
+    "revision": 4
 }

@@ -24,7 +24,7 @@ module.exports = (sequelize, Datatypes) => {
     },
     
     PostBody: {
-      type: Datatypes.STRING,
+      type: Datatypes.TEXT,
       allowNull: false,
     },
 

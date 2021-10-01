@@ -104,10 +104,13 @@ router.get("/posts", function (req, res, next) {
           },
         })
         .then((posts) => {
-          res.json({
-            status: 200,
-            message: "successful",
-            myPosts: posts,
+          models.users.findAll({}).then((usersRes) => {
+            res.json({
+              status: 200,
+              message: "successful",
+              myPosts: posts,
+              userInfo: user
+            });
           });
         });
     } else {
@@ -117,39 +120,64 @@ router.get("/posts", function (req, res, next) {
   });
 });
 
-router.get("/brazil", function (req, res, next) {
-  models.posts.findAll({
-    where: {Country: "Brazil"}
-  }).then((posts) => {
-    res.json({
-      status: 200,
-      message: "successful",
-      myPosts: posts,
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+router.get("/:country", function (request, response, next) {
+  // GET /united-states-of-america
+  models.posts
+    .findAll({
+      where: { Country: capitalize(request.params.country) }, // capitalize: brazil -> Brazil
+    })
+    .then((posts) => {
+      res.json({
+        status: 200,
+        message: "successful",
+        myPosts: posts,
+      });
     });
-  });
+});
+
+router.get("/brazil", function (req, res, next) {
+  models.posts
+    .findAll({
+      where: { Country: "Brazil" },
+    })
+    .then((posts) => {
+      res.json({
+        status: 200,
+        message: "successful",
+        myPosts: posts,
+      });
+    });
 });
 
 router.get("/greece", function (req, res, next) {
-  models.posts.findAll({
-    where: {Country: "Greece"}
-  }).then((posts) => {
-    res.json({
-      status: 200,
-      message: "successful",
-      myPosts: posts,
+  models.posts
+    .findAll({
+      where: { Country: "Greece" },
+    })
+    .then((posts) => {
+      res.json({
+        status: 200,
+        message: "successful",
+        myPosts: posts,
+      });
     });
-  });
 });
 router.get("/mexico", function (req, res, next) {
-  models.posts.findAll({
-    where: {Country: "Mexico"}
-  }).then((posts) => {
-    res.json({
-      status: 200,
-      message: "successful",
-      myPosts: posts,
+  models.posts
+    .findAll({
+      where: { Country: "Mexico" },
+    })
+    .then((posts) => {
+      res.json({
+        status: 200,
+        message: "successful",
+        myPosts: posts,
+      });
     });
-  });
 });
 function getToken(req) {
   let headers = req.headers["authorization"];
