@@ -5,42 +5,35 @@ var Sequelize = require('sequelize');
 /**
  * Actions summary:
  *
- * changeColumn "Country" on table "posts"
+ * addColumn "Country" to table "posts"
+ * changeColumn "Delete" on table "posts"
  * changeColumn "PostBody" on table "posts"
+ * changeColumn "PostTitle" on table "posts"
  *
  **/
 
 var info = {
-    "revision": 4,
+    "revision": 3,
     "name": "country_column",
-    "created": "2021-10-01T15:55:25.457Z",
+    "created": "2021-09-30T00:19:54.464Z",
     "comment": ""
 };
 
-var migrationCommands = [{
-        fn: "changeColumn",
+var migrationCommands = [
+    
+    {
+        fn: "addColumn",
         params: [
-            "posts",
-            "Country",
+            "users",
+            "UserBio",
             {
-                "type": Sequelize.STRING,
-                "field": "Country",
+                "type": Sequelize.TEXT,
+                "field": "UserBio",
                 "allowNull": false
             }
         ]
     },
-    {
-        fn: "changeColumn",
-        params: [
-            "posts",
-            "PostBody",
-            {
-                "type": Sequelize.TEXT,
-                "field": "PostBody",
-                "allowNull": false
-            }
-        ]
-    }
+    
 ];
 
 module.exports = {

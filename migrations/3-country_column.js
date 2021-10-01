@@ -19,14 +19,16 @@ var info = {
     "comment": ""
 };
 
-var migrationCommands = [{
+var migrationCommands = [
+    {
         fn: "addColumn",
         params: [
             "posts",
             "Country",
             {
                 "type": Sequelize.STRING,
-                "field": "Country"
+                "field": "Country",
+                defaultValue: "Greece"
             }
         ]
     },
@@ -48,7 +50,7 @@ var migrationCommands = [{
             "posts",
             "PostBody",
             {
-                "type": Sequelize.STRING,
+                "type": Sequelize.TEXT,
                 "field": "PostBody",
                 "allowNull": false
             }
