@@ -42,7 +42,38 @@ router.post("/signup", function (req, res, next) {
       }
     });
 });
+
+// Create new user if one doesn't exist
+
+
+// router.post("/userBio", function (req, res, next) {
+//   let token = getToken(req);
+//   authService
+//     .verifyUser(token)
+//     .then((user) => {
+//       models.user
+//         .findOne({
+//           where: {
+//             UserId: user.UserId,
+//           },
+//         }).
+//         .catch((e) => console.log(`Error finding the user`, e))
+//         .spread(function (result, created) {
+//           if (created) {
+//             res.json({
+//               status: 200,
+//               message: "Post successfully created.",
+//               post: result,
+//             });
+//           } else {
+//             res.send("This post already exists");
+//           }
+//         });
+//     })
+//     .catch((e) => console.log(e));
+// });
 // Login user and return JWT as cookie
+
 router.post("/login", function (req, res, next) {
   models.users
     .findOne({
