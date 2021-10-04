@@ -19,6 +19,10 @@ module.exports = (sequelize, Datatypes) => {
         type: Datatypes.STRING,
         unique: true
       },
+      UserBio: {
+        type: Datatypes.TEXT,
+        allowNull: true
+        },
       Password: Datatypes.STRING,
       createdAt: Datatypes.DATE,
       updatedAt: Datatypes.DATE

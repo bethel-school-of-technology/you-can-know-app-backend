@@ -78,6 +78,11 @@
                     "field": "Username",
                     "seqType": "Sequelize.STRING"
                 },
+                "UserBio": {
+                    "allowNull": true,
+                    "field": "UserBio",
+                    "seqType": "Sequelize.TEXT"
+                },
                 "Password": {
                     "field": "Password",
                     "seqType": "Sequelize.STRING"
@@ -94,5 +99,5 @@
             "indexes": []
         }
     },
-    "revision": 4
+    "revision": 5
 }
