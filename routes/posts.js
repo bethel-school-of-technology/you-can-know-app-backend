@@ -3,50 +3,41 @@ var router = express.Router();
 var models = require("../models");
 var authService = require("../services/auth");
 
-/* GET users listing. */
+/* GET Posts listing. */
 router.get("/", function (req, res, next) {
-  models.posts
-    .findAll({
-      // include: [
-      //  {
-      //   model: models.users,
-      //   required: true
-      //  }
-      // ]
-    })
-    .then((posts) => {
-      // Retrieve all users
-      const postArray = [];
-      posts.forEach((post) => postArray.push(post.dataValues));
+  models.posts.findAll({}).then((posts) => {
+    // Retrieve all users
+    const postArray = [];
+    posts.forEach((post) => postArray.push(post.dataValues));
 
-      models.users.findAll({}).then((users) => {
-        const usersArray = [];
-        users.forEach((user) => usersArray.push(user));
+    models.users.findAll({}).then((users) => {
+      const usersArray = [];
+      users.forEach((user) => usersArray.push(user));
 
-        res.json({
-          status: 200,
-          message: "successful",
-          myPosts: postArray.map((post) => {
-            const associatedUser = usersArray.find(
-              (user) => user.UserId === post.UserId
-            );
-            return {
-              PostTitle: post.PostTitle,
-              PostBody: post.PostBody,
-              Country: post.Country,
-              createdAt: post.createdAt,
-              user: {
-                FirstName: associatedUser.FirstName,
-                LastName: associatedUser.LastName,
-              },
-            };
-          }),
-        });
+      res.json({
+        status: 200,
+        message: "successful",
+        myPosts: postArray.map((post) => {
+          const associatedUser = usersArray.find(
+            (user) => user.UserId === post.UserId
+          );
+          return {
+            PostTitle: post.PostTitle,
+            PostBody: post.PostBody,
+            Country: post.Country,
+            createdAt: post.createdAt,
+            user: {
+              FirstName: associatedUser.FirstName,
+              LastName: associatedUser.LastName,
+            },
+          };
+        }),
       });
     });
+  });
 });
 
-// Create new user if one doesn't exist
+// Create new post if one doesn't exist
 router.post("/create", function (req, res, next) {
   let token = getToken(req);
   authService
@@ -77,20 +68,67 @@ router.post("/create", function (req, res, next) {
     .catch((e) => console.log(e));
 });
 
-router.get("/", function (req, res, next) {
-  res.json({ message: "this works" });
+// Route to update a post
+router.post("/update", function (req, res) {
   let token = getToken(req);
-  authService.verifyUser(token).token((user) => {
-    if (user) {
-      models.posts.findAll({}).then((posts) => {
-        console.log(posts);
-      });
-    }
-  });
-  models.posts.findAll({}).then((posts) => {
-    console.log(posts);
-  });
+
+  authService
+    .verifyUser(token)
+    .then((user) => {
+      models.posts
+        .update(
+          { PostBody: req.body.postBody },
+          {
+            where: {
+              PostId: req.body.postId,
+              UserId: user.dataValues.UserId,
+            },
+          }
+        )
+        .then((result) => {
+          console.log("Successfull update");
+          res.json({
+            status: 200,
+            message: "Post successfully updated.",
+            post: result,
+          });
+        })
+        .catch((error) => {
+          console.log(`Error updating post`, error);
+        });
+    })
+    .catch((error) => console.log(`Auth error`, error));
 });
+
+// Route du delete a post
+router.post("/delete", function (req, res) {
+  let token = getToken(req);
+
+  authService
+    .verifyUser(token)
+    .then((user) => {
+      models.posts
+        .destroy({
+          where: {
+            PostId: req.body.postId,
+            UserId: user.dataValues.UserId,
+          },
+        })
+        .then((result) => {
+          console.log("Successfull delete");
+          res.json({
+            status: 200,
+            message: "Post successfully delete.",
+            post: result,
+          });
+        })
+        .catch((error) => {
+          console.log(`Error deleting post`, error);
+        });
+    })
+    .catch((error) => console.log(`Auth error`, error));
+});
+
 
 function getToken(req) {
   let headers = req.headers["authorization"];
