@@ -43,7 +43,7 @@ router.post("/signup", function (req, res, next) {
     });
 });
 
-// Create new post if one doesn't exist
+// Create and Update UserBio if one doesn't exist
 router.post("/postBio", function (req, res, next) {
   let token = getToken(req);
 
@@ -74,58 +74,6 @@ router.post("/postBio", function (req, res, next) {
     })
     .catch((e) => console.log(e));
 });
-
-// Create userBio if one doesn't exist
-// router.post("/userbio", function (req, res, next) {
-//   models.users
-//     .findOrCreate({
-//       where: {
-//         UserBio: req.body.userBio,
-//       },
-//     })
-//     .spread(function (result, created) {
-//       if (created) {
-//         res.send({
-//           message: "User Bio created Successfully",
-//           data: result,
-//         });
-//       } else {
-//         res.send({
-//           message: "user already exist!",
-//           data: result,
-//         });
-//       }
-//     });
-// });
-
-// Create new user if one doesn't exist
-
-// router.post("/userbio", function (req, res, next) {
-//   let token = getToken(req);
-//   authService
-//     .verifyUser(token)
-//     .then((user) => {
-//       models.user
-//         .findandUpdate({
-//           where: {
-//             UserId: user.UserId,
-//           },
-//         })
-//         .catch((e) => console.log(`Error finding the user`, e))
-//         .spread(function (result, created) {
-//           if (created) {
-//             res.json({
-//               status: 200,
-//               message: "Post successfully created.",
-//               post: result,
-//             });
-//           } else {
-//             res.send("This post already exists");
-//           }
-//         });
-//     })
-//     .catch((e) => console.log(e));
-// });
 
 // Login user and return JWT as cookie
 
@@ -208,6 +156,39 @@ router.get("/posts", function (req, res, next) {
   });
 });
 
+
+// Create and Update UserBio if one doesn't exist
+router.post("/posts", function (req, res, next) {
+  let token = getToken(req);
+
+  authService
+    .verifyUser(token)
+    .then((user) => {
+      models.users
+        .update(
+          { myPosts: req.body.myPosts},
+          {
+            where: {
+              UserId: user.UserId,
+            },
+          }
+        )
+        .catch((e) => console.log(`Error inserting new post`, e))
+        .spread(function (result, created) {
+          if (created) {
+            res.json({
+              status: 200,
+              message: "UserPost successfully created.",
+              user: result,
+            });
+          } else {
+            res.send("This UserPost already exists");
+          }
+        });
+    })
+    .catch((e) => console.log(e));
+});
+
 // router.post("/postBio", function (req, res, next) {
 //   let token = getToken(req);
 //   authService.verifyUser(token).then((users) => {
@@ -238,20 +219,20 @@ router.get("/posts", function (req, res, next) {
 //   });
 // });
 
-router.get("/:country", function (request, response, next) {
-  // GET /united-states-of-america
-  models.posts
-    .findAll({
-      where: { Country: capitalize(request.params.country) }, // capitalize: brazil -> Brazil
-    })
-    .then((posts) => {
-      res.json({
-        status: 200,
-        message: "successful",
-        myPosts: posts,
-      });
-    });
-});
+// router.get("/:country", function (request, response, next) {
+//   // GET /united-states-of-america
+//   models.posts
+//     .findAll({
+//       where: { Country: capitalize(request.params.country) }, // capitalize: brazil -> Brazil
+//     })
+//     .then((posts) => {
+//       res.json({
+//         status: 200,
+//         message: "successful",
+//         myPosts: posts,
+//       });
+//     });
+// });
 
 router.get("/brazil", function (req, res, next) {
   models.posts
