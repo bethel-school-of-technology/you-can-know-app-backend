@@ -21,8 +21,9 @@ module.exports = (sequelize, Datatypes) => {
       },
       UserBio: {
         type: Datatypes.TEXT,
-        allowNull: true
-        },
+        allowNull: true,
+        defaultValue: "",
+      },
       Password: Datatypes.STRING,
       createdAt: Datatypes.DATE,
       updatedAt: Datatypes.DATE

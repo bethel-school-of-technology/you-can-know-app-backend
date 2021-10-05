@@ -60,16 +60,12 @@ router.post("/postBio", function (req, res, next) {
           }
         )
         .catch((e) => console.log(`Error inserting new post`, e))
-        .spread(function (result, created) {
-          if (created) {
-            res.json({
-              status: 200,
-              message: "UserBio successfully created.",
-              user: result,
-            });
-          } else {
-            res.send("This UserBio already exists");
-          }
+        .spread(function (result) {
+          res.json({
+            status: 200,
+            message: "UserBio successfully created.",
+            user: result,
+          });
         });
     })
     .catch((e) => console.log(e));
@@ -219,21 +215,6 @@ router.post("/posts", function (req, res, next) {
 //   });
 // });
 
-// router.get("/:country", function (request, response, next) {
-//   // GET /united-states-of-america
-//   models.posts
-//     .findAll({
-//       where: { Country: capitalize(request.params.country) }, // capitalize: brazil -> Brazil
-//     })
-//     .then((posts) => {
-//       res.json({
-//         status: 200,
-//         message: "successful",
-//         myPosts: posts,
-//       });
-//     });
-// });
-
 router.get("/brazil", function (req, res, next) {
   models.posts
     .findAll({
@@ -274,6 +255,7 @@ router.get("/mexico", function (req, res, next) {
       });
     });
 });
+
 function getToken(req) {
   let headers = req.headers["authorization"];
   //console.log(headers);
