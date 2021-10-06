@@ -134,6 +134,7 @@ router.get("/posts", function (req, res, next) {
           where: {
             UserId: user.UserId,
           },
+          order: [['updatedAt', 'DESC']]
         })
         .then((posts) => {
           models.users.findAll({}).then((usersRes) => {
